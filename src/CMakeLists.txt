@@ -38,7 +38,16 @@ add_library(${COMPONENT_NAME} SHARED
    ${RES_FILES}
 )
 
+# Add include path
+target_include_directories(${COMPONENT_NAME} PUBLIC 
+   ${CMAKE_SOURCE_DIR}/3rdparty/expat/expat/lib 
+   ${CMAKE_SOURCE_DIR}/3rdparty/wxWidgets_setup_h
+   ${CMAKE_SOURCE_DIR}/3rdparty/wxWidgets/include
+   ${CMAKE_SOURCE_DIR}/include
+)
 # Add non default windows libraries
-target_link_libraries (${COMPONENT_NAME} comctl32.lib rpcrt4.lib version.lib wininet.lib)
-
-target_link_libraries (${COMPONENT_NAME} expat)
+target_link_libraries (${COMPONENT_NAME} 
+   comctl32.lib rpcrt4.lib version.lib wininet.lib
+)
+# Add dependencies with expat and WinSparkle_wx
+target_link_libraries (${COMPONENT_NAME} WinSparkle_expat WinSparkle_wx)

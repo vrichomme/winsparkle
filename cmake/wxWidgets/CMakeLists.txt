@@ -7,9 +7,15 @@ project(WinSparkle_wx)
 #
 #include(cotire)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+include(msvc_precomp_headers)
+
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
-set(INCLUDE_DIRS ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
+set(INCLUDE_DIRS 
+   ${SOURCE_DIR}/wxWidgets_setup_h 
+   ${SOURCE_DIR}/wxWidgets/include
+)
 include_directories(${INCLUDE_DIRS})
 
 #if possible activate c++11
@@ -24,7 +30,12 @@ add_definitions(
   -D_LIB
   -DUNICODE -D_UNICODE)
 
-set(SOURCES
+#set(PRECOMP_SOURCES 
+#  ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+#  ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.cpp
+#)
+
+set(WX_SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/any.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/appbase.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/appcmn.cpp
@@ -193,7 +204,13 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/msw/ownerdrw.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/wxprintf.cpp)
 
-add_library(${PROJECT_NAME} OBJECT ${SOURCES})
+set(SOURCES ${WX_SOURCES})
+#set(SOURCES ${PRECOMP_SOURCES} ${WX_SOURCES})
+#ADD_MSVC_PRECOMPILED_HEADER("stdafx.h" "stdafx.cpp" SOURCES)
+add_library(${PROJECT_NAME} ${SOURCES})
+#source_group("wxprecomp" FILES "${PRECOMP_SOURCES}")
+
+
 #set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
 #cotire(${PROJECT_NAME})
 set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)

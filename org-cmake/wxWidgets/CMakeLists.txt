@@ -1,19 +1,16 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 2.8.12)
+project(wxWidgets)
 
-project(WinSparkle_wx)
+if(POLICY CMP0059)
+    cmake_policy(SET CMP0059 OLD)
+endif()
 
-# Support for precompiled-headers
-# http://stackoverflow.com/questions/148570/using-pre-compiled-headers-with-cmake
-#
-#include(cotire)
-
-set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
+set(SOURCE_DIR ${ROOT_DIR}/3rdparty)
 
 set(INCLUDE_DIRS ${SOURCE_DIR}/wxWidgets_setup_h ${SOURCE_DIR}/wxWidgets/include)
 include_directories(${INCLUDE_DIRS})
 
-#if possible activate c++11
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_definitions(
   -D_CRT_SECURE_NO_WARNINGS
@@ -194,13 +191,12 @@ set(SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/wxprintf.cpp)
 
 add_library(${PROJECT_NAME} OBJECT ${SOURCES})
-#set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
-#cotire(${PROJECT_NAME})
 set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 
-#set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-#include(PCHSupport)
-#if(NOT PCHSupport_FOUND)
-#  message(FATAL_ERROR "Precompiled headers are not supported")
-#endif()
-#ADD_PRECOMPILED_HEADER(${PROJECT_NAME} ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+include(PCHSupport)
+if(NOT PCHSupport_FOUND)
+  message(FATAL_ERROR "Precompiled headers are not supported")
+endif()
+
+ADD_PRECOMPILED_HEADER(${PROJECT_NAME} ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)

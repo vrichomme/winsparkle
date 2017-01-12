@@ -1,6 +1,6 @@
 project(expat)
 
-set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty/expat/expat)
+set(SOURCE_DIR ${ROOT_DIR}/3rdparty/expat)
 
 cmake_minimum_required(VERSION 2.6)
 set(PACKAGE_BUGREPORT "expat-bugs@libexpat.org")

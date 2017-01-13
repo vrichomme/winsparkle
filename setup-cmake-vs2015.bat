@@ -1,17 +1,29 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
+set ORG_PWD=%~dp0
+set CMAKE_BIN_PATH=C:\Program Files\CMake-3.7.1\bin
+set CMAKE_CMD="%CMAKE_BIN_PATH%\cmake.exe"
+
+
 REM SET /a count=5
 REM for /l %%a in (1,1,%count%) do call set "Myvar=%%Myvar%%, %%a"
 REM ECHO %Myvar:~2%
 REM PAUSE 
-
 CLS
 echo( 
 echo *******************************************************
 echo Helper script to generate makefiles/projects with cmake
 echo *******************************************************
 echo(
+ 
+REM Check cmake is in our path
+if not exist %CMAKE_CMD% (
+   echo Cannot find %CMAKE_CMD%. 
+   echo Please update CMAKE_BIN_PATH inside this script.
+   echo(
+   goto Exit
+)
  
 REM We start to support from VS 2005
 set  arrayline[8]=2005
@@ -22,105 +34,107 @@ set  arrayline[12]=2013
 set  arrayline[14]=2015
 set  arrayline[15]=2017
 
-set ORG_PWD=%~dp0
-set CMAKE_BIN_PATH=C:\Program Files\CMake\bin
-set CMAKE_CMD="%CMAKE_BIN_PATH%\cmake.exe"
-set BUILD_DIR=build
-set vs_detected=
+
+set vs_index=
 if defined VS80COMNTOOLS (
-   SET PRODUCT_VER=2005
    SET INTERNAL_VER=8
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS90COMNTOOLS (
-   SET PRODUCT_VER=2008
    SET INTERNAL_VER=9
-   SET vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS100COMNTOOLS (
-   SET PRODUCT_VER=2010
    SET INTERNAL_VER=10
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS110COMNTOOLS (
-   SET PRODUCT_VER=2012
+  
    SET INTERNAL_VER=11
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS120COMNTOOLS ( 
-   SET PRODUCT_VER=2013
    SET INTERNAL_VER=12
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS140COMNTOOLS (
-   SET PRODUCT_VER=2015
    SET INTERNAL_VER=14
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
 if defined VS150COMNTOOLS (
-   SET PRODUCT_VER=2017
    SET INTERNAL_VER=15
-   set vs_detected=!vs_detected! %PRODUCT_VER%
+   set vs_index=!vs_index! %INTERNAL_VER%
 )
-REM Remove spaces at the beginning 
-SET vs_detected=%vs_detected:~1%
+REM Remove space at the beginning 
 SET vs_index=%vs_index:~1%
 
-echo %vs_index%
 echo ---------------------------------------------
 echo * Visual Studio detection:                  *
 echo ---------------------------------------------
-for %%a in (%vs_detected%) do (
-   echo Visual Studio %%a
-   echo/
+for %%a in (%vs_index%) do (
+   echo [%%a] Visual Studio !arrayline[%%a]!
 )
-REM for %%f in %vs_detected% do echo Visual Studio %%f
 echo ---------------------------------------------
-echo( 
-echo(
-
-
+set VSINDEXCHOICE=
+set /P VSINDEXCHOICE=Please enter the index (ex 14 to generate for VS2015): 
+set VSNUM=%VSINDEXCHOICE%
+set VSVER=!arrayline[%VSINDEXCHOICE%]!
+set BUILD_DIR=build\msvc%VSVER%
+REM echo %VSNUM% %VSVER% %BUILD_DIR%
+ 
 REM echo %vs_detected%
 REM for %%f in %vs_detected% do (
 REM    echo "%%f"
 REM )
 
+:AskRemoveBuildDir
+set DEL_BUILD_FOLDER=
 IF EXIST %BUILD_DIR% (
-   echo I need to delete cmake cache %BUILD_DIR% folder
-   set DEL_BUILD_FOLDER=
-   set /P DEL_BUILD_FOLDER=Press y or n: 
-   If /I "%DEL_BUILD_FOLDER%"=="y" (
+   CLS
+   set /P DEL_BUILD_FOLDER=%BUILD_DIR% already exists. Press y to remove or q to quit 
+   if /I "%DEL_BUILD_FOLDER%"=="y" (
+     echo 0
      RD /S /Q %BUILD_DIR%
+     goto AfterAskRemoveBuildDir
    )
-   If /I "%DEL_BUILD_FOLDER%"=="n" (
+   If /I "%DEL_BUILD_FOLDER%"=="q" (
+      echo 3
       goto Exit
    )
+REM   echo Wrong choice & goto AskRemoveBuildDir
 )
-
+:AfterAskRemoveBuildDir
 if not exist %BUILD_DIR% (mkdir %BUILD_DIR%)
-cd %BUILD_DIR%
 
 :AskArch
-REM ARCH is Win32 by default
-set ARCH=
-echo [0] Win32
-echo [1] Win64
+echo [0] Win64
+echo [1] Win32
 set ARCHCHOICE=
 set /P ARCHCHOICE=Please choose your architecture (or q to quit): 
-If /I "%ARCHCHOICE%"=="0" (
-   %CMAKE_CMD% -G "Visual Studio 14 2015" ..
+if /I "%ARCHCHOICE%"=="0" (
+   set VSARCH=Win64
    goto AfterAskArch
 )
 if /I "%ARCHCHOICE%"=="1" (
-   set ARCH=Win64
-   %CMAKE_CMD% -G "Visual Studio 14 2015 Win64" ..
+   set VSARCH=
    goto AfterAskArch
 )
 if /I "%ARCHCHOICE%"=="q" (
    goto Exit
 )
-echo Incorrect input & goto AskArch
+echo Wrong choice & goto AskArch
 :AfterAskArch
+
+cd %BUILD_DIR%
+set CMAKE_GEN="Visual Studio %VSNUM% %VSVER% %VSARCH%"
+CLS
+echo(
+echo Now calling cmake with the generator %CMAKE_GEN%: 
+echo(
+echo(
+%CMAKE_CMD% -G %CMAKE_GEN% ..\..
+REM %CMAKE_CMD% -G %CMAKE_GEN% ..\.. > setup-cmake-msvc.txt 2>&1
+
 
 :Exit
 cd %ORG_PWD%

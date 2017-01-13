@@ -33,39 +33,41 @@ set  arrayline[12]=2013
 set  arrayline[14]=2015
 set  arrayline[15]=2017
 
+set vs_index=8 9 10 11 12 14 15
 
-set vs_index=
-if defined VS80COMNTOOLS (
-   SET INTERNAL_VER=8
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS90COMNTOOLS (
-   SET INTERNAL_VER=9
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS100COMNTOOLS (
-   SET INTERNAL_VER=10
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS110COMNTOOLS (
+REM set vs_index=
+REM if defined VS80COMNTOOLS (
+   REM SET INTERNAL_VER=8
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS90COMNTOOLS (
+   REM SET INTERNAL_VER=9
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS100COMNTOOLS (
+   REM SET INTERNAL_VER=10
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS110COMNTOOLS (
   
-   SET INTERNAL_VER=11
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS120COMNTOOLS ( 
-   SET INTERNAL_VER=12
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS140COMNTOOLS (
-   SET INTERNAL_VER=14
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
-if defined VS150COMNTOOLS (
-   SET INTERNAL_VER=15
-   set vs_index=!vs_index! %INTERNAL_VER%
-)
+   REM SET INTERNAL_VER=11
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS120COMNTOOLS ( 
+   REM SET INTERNAL_VER=12
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS140COMNTOOLS (
+   REM SET INTERNAL_VER=14
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
+REM if defined VS150COMNTOOLS (
+   REM SET INTERNAL_VER=15
+   REM set vs_index=!vs_index! %INTERNAL_VER%
+REM )
 REM Remove space at the beginning 
-SET vs_index=%vs_index:~1%
+REM echo %vs_index%
+REM SET vs_index=%vs_index:~1%
 
 echo ---------------------------------------------
 echo * Visual Studio detection:                  *

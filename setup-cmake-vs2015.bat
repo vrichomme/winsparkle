@@ -5,7 +5,6 @@ set ORG_PWD=%~dp0
 set CMAKE_BIN_PATH=C:\Program Files\CMake-3.7.1\bin
 set CMAKE_CMD="%CMAKE_BIN_PATH%\cmake.exe"
 
-
 REM SET /a count=5
 REM for /l %%a in (1,1,%count%) do call set "Myvar=%%Myvar%%, %%a"
 REM ECHO %Myvar:~2%
@@ -80,37 +79,32 @@ set /P VSINDEXCHOICE=Please enter the index (ex 14 to generate for VS2015):
 set VSNUM=%VSINDEXCHOICE%
 set VSVER=!arrayline[%VSINDEXCHOICE%]!
 set BUILD_DIR=build\msvc%VSVER%
-REM echo %VSNUM% %VSVER% %BUILD_DIR%
- 
-REM echo %vs_detected%
-REM for %%f in %vs_detected% do (
-REM    echo "%%f"
-REM )
 
-:AskRemoveBuildDir
-set DEL_BUILD_FOLDER=
-IF EXIST %BUILD_DIR% (
-   CLS
-   set /P DEL_BUILD_FOLDER=%BUILD_DIR% already exists. Press y to remove or q to quit 
-   if /I "%DEL_BUILD_FOLDER%"=="y" (
-     echo 0
-     RD /S /Q %BUILD_DIR%
-     goto AfterAskRemoveBuildDir
-   )
-   If /I "%DEL_BUILD_FOLDER%"=="q" (
-      echo 3
-      goto Exit
-   )
-REM   echo Wrong choice & goto AskRemoveBuildDir
-)
-:AfterAskRemoveBuildDir
+REM set DEL_BUILD_FOLDER=
+REM IF EXIST %BUILD_DIR% (
+   REM CLS
+REM :AskRemoveBuildDir
+REM set DEL_BUILD_FOLDER=
+REM set /P DEL_BUILD_FOLDER=%BUILD_DIR% already exists. Press y to remove (or q to quit) 
+REM if /I "%DEL_BUILD_FOLDER%"=="y" (
+REM   RD /S /Q %BUILD_DIR%
+   REM goto AfterAskRemoveBuildDir
+REM )
+REM if /I "%DEL_BUILD_FOLDER%"=="q" (
+   REM goto Exit
+REM )
+REM echo Wrong choice & goto AskRemoveBuildDir
+REM :AfterAskRemoveBuildDir
+REM )
 if not exist %BUILD_DIR% (mkdir %BUILD_DIR%)
 
 :AskArch
+CLS
+echo(
 echo [0] Win64
 echo [1] Win32
 set ARCHCHOICE=
-set /P ARCHCHOICE=Please choose your architecture (or q to quit): 
+set /P ARCHCHOICE=Please enter number for architecture (or q to quit): 
 if /I "%ARCHCHOICE%"=="0" (
    set VSARCH=Win64
    goto AfterAskArch
@@ -129,11 +123,40 @@ cd %BUILD_DIR%
 set CMAKE_GEN="Visual Studio %VSNUM% %VSVER% %VSARCH%"
 CLS
 echo(
-echo Now calling cmake with the generator %CMAKE_GEN%: 
+echo Now calling cmake with the following cmd: 
+echo %CMAKE_CMD% -G %CMAKE_GEN% ..\..
 echo(
 echo(
 %CMAKE_CMD% -G %CMAKE_GEN% ..\..
 REM %CMAKE_CMD% -G %CMAKE_GEN% ..\.. > setup-cmake-msvc.txt 2>&1
+
+set LAUNCHSOLUTION=
+set slnfile=
+:AskLaunchSolution
+IF %ERRORLEVEL% EQU 0 (
+   CLS
+   echo CMake success
+   
+   set /P LAUNCHSOLUTION=Would you like to launch the solution ? [y/n] 
+   if /I "%LAUNCHSOLUTION%"=="y" (
+      
+	  for %%A in ("*.sln") DO (
+		START %%A
+		goto Exit
+	  )
+	  REM ECHO --- %slnfile% ---
+      REM START WinSparkle.sln
+      goto AfterAskLaunchSolution
+   )
+   if /I "%LAUNCHSOLUTION%"=="n" (
+      goto Exit
+   )
+   echo Wrong choice & goto AskLaunchSolution
+)
+:AfterAskLaunchSolution
+
+REM IF %ERRORLEVEL% NEQ 0 (
+
 
 
 :Exit

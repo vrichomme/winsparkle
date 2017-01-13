@@ -206,6 +206,10 @@ set(WX_SOURCES
 
 source_group("wxprecomp" FILES ${PRECOMP_SOURCES})
 add_library(${PROJECT_NAME} ${WX_SOURCES} ${PRECOMP_SOURCES})
+
+#remove warning C4535: calling _set_se_translator() requires /EHa
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4535")
+
 #set_property(DIRECTORY ${PROJECT_NAME} PROPERTY FOLDER "dependencies")
 
 # !!! Precompiled headers !!!

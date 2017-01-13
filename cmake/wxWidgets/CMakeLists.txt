@@ -6,9 +6,9 @@ project(WinSparkle_wx)
 # http://stackoverflow.com/questions/148570/using-pre-compiled-headers-with-cmake
 #
 #include(cotire)
-
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-include(msvc_precomp_headers)
+include(PrecompiledHeader.cmake)
+#include(msvc_precomp_headers)
 
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
@@ -23,17 +23,14 @@ set (CMAKE_CXX_STANDARD 11)
 
 add_definitions(
   -D_CRT_SECURE_NO_WARNINGS
-  -DWX_PRECOMP
   -DWXBUILDING
-  -DWIN32
-  -DNDEBUG
   -D_LIB
-  -DUNICODE -D_UNICODE)
+)
 
-#set(PRECOMP_SOURCES 
-#  ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
-#  ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.cpp
-#)
+set(PRECOMP_SOURCES 
+  ${CMAKE_CURRENT_SOURCE_DIR}/wxprec.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/wxprec.h
+)
 
 set(WX_SOURCES
   ${SOURCE_DIR}/wxWidgets/src/common/any.cpp
@@ -204,16 +201,22 @@ set(WX_SOURCES
   ${SOURCE_DIR}/wxWidgets/src/msw/ownerdrw.cpp
   ${SOURCE_DIR}/wxWidgets/src/common/wxprintf.cpp)
 
-set(SOURCES ${WX_SOURCES})
-#set(SOURCES ${PRECOMP_SOURCES} ${WX_SOURCES})
-#ADD_MSVC_PRECOMPILED_HEADER("stdafx.h" "stdafx.cpp" SOURCES)
-add_library(${PROJECT_NAME} ${SOURCES})
-#source_group("wxprecomp" FILES "${PRECOMP_SOURCES}")
+# set(SOURCES ${WX_SOURCES} ${PRECOMP_SOURCES})
+# ADD_MSVC_PRECOMPILED_HEADER("wxprec.h" "wxprec.cpp" SOURCES)
+
+source_group("wxprecomp" FILES ${PRECOMP_SOURCES})
+add_library(${PROJECT_NAME} ${WX_SOURCES} ${PRECOMP_SOURCES})
+#set_property(DIRECTORY ${PROJECT_NAME} PROPERTY FOLDER "dependencies")
+
+# !!! Precompiled headers !!!
+#add_precompiled_header(${PROJECT_NAME} wxprec.h FORCEINCLUDE SOURCE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/wxprec.cpp)
+#add_precompiled_header(${PROJECT_NAME} wxprec.h FORCEINCLUDE SOURCE_CXX wxprec.cpp)
+#add_precompiled_header(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/wxprec.h FORCEINCLUDE SOURCE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/wxprec.cpp)
 
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT ${SOURCE_DIR}/wxWidgets/include/wx/wxprec.h)
 #cotire(${PROJECT_NAME})
-set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
+#set(wxWidgets_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 
 #set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 #include(PCHSupport)

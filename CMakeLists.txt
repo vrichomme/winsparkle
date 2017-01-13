@@ -5,7 +5,7 @@ project(WinSparkle)
 # add path to custom cmake modules
 #set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
-add_definitions(-D_UNICODE -DUNICODE -DUSING_CMAKE -D_CRT_SECURE_NO_WARNINGS -DXML_STATIC -DBUILDING_WIN_SPARKLE -DWINSPARKLE_EXPORTS)
+add_definitions(-D_UNICODE -DUNICODE -DUSING_CMAKE -D_CRT_SECURE_NO_WARNINGS)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/x64)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/x64)
@@ -27,11 +27,13 @@ SET(BUILD_examples OFF CACHE BOOL "build the examples for expat library")
 SET(BUILD_tests OFF CACHE BOOL "build the tests for expat library")
 SET(BUILD_shared OFF CACHE BOOL "build a shared expat library")
 add_subdirectory(3rdparty/expat/expat)
-# we change the project name from expat to WinSparkle_expat
-# set_property(TARGET expat PROPERTY PROJECT_LABEL "WinSparkle_expat")
+set_property(TARGET WinSparkle_expat PROPERTY FOLDER "dependencies")
+#set_property(TARGET expat PROPERTY PROJECT_LABEL "WinSparkle_expat")
+
 
 # wxWidgets 
 add_subdirectory(cmake/wxWidgets)
+set_property(TARGET WinSparkle_wx PROPERTY FOLDER "dependencies")
 
 # WinSparkle project
 add_subdirectory(src)

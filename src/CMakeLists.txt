@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.4)
 set(COMPONENT_NAME WinSparkle)	
 
 
+add_definitions(-DXML_STATIC -DBUILDING_WIN_SPARKLE -DWINSPARKLE_EXPORTS)
+
 file(GLOB_RECURSE INCLUDE_FILES *.h)
 file(GLOB_RECURSE SRC_FILES *.cpp *.manifest)
 set(RES_FILES winsparkle.rc ../translations/translations.rc)

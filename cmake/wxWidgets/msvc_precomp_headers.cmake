@@ -1,9 +1,13 @@
 MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
   IF(MSVC)
     GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
+	message(STATUS **** PrecompiledBasename= ${PrecompiledBasename} *****)
+	message(STATUS **** PrecompiledSource= ${PrecompiledSource} *****)
+	
     SET(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
     SET(Sources ${${SourcesVar}})
-
+	message(STATUS **** Sources= ${Sources} *****)
+	
     SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
                                 PROPERTIES COMPILE_FLAGS "/Yc\"${PrecompiledHeader}\" /Fp\"${PrecompiledBinary}\""
                                            OBJECT_OUTPUTS "${PrecompiledBinary}")

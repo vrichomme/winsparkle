@@ -132,22 +132,19 @@ echo(
 %CMAKE_CMD% -G %CMAKE_GEN% ..\..
 REM %CMAKE_CMD% -G %CMAKE_GEN% ..\.. > setup-cmake-msvc.txt 2>&1
 
-set LAUNCHSOLUTION=
+
 set slnfile=
 :AskLaunchSolution
 IF %ERRORLEVEL% EQU 0 (
    CLS
    echo CMake success
-   
-   set /P LAUNCHSOLUTION=Would you like to launch the solution ? [y/n] 
+   set LAUNCHSOLUTION=
+   set /P LAUNCHSOLUTION=Would you like to launch the solution(y/n) 
    if /I "%LAUNCHSOLUTION%"=="y" (
-      
 	  for %%A in ("*.sln") DO (
 		START %%A
 		goto Exit
 	  )
-	  REM ECHO --- %slnfile% ---
-      REM START WinSparkle.sln
       goto AfterAskLaunchSolution
    )
    if /I "%LAUNCHSOLUTION%"=="n" (

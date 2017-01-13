@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 
 set ORG_PWD=%~dp0
-set CMAKE_BIN_PATH=C:\Program Files\CMake-3.7.1\bin
+set CMAKE_BIN_PATH=C:\Program Files\CMake\bin
 set CMAKE_CMD="%CMAKE_BIN_PATH%\cmake.exe"
 
 REM SET /a count=5

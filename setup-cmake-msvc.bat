@@ -70,7 +70,7 @@ REM echo %vs_index%
 REM SET vs_index=%vs_index:~1%
 
 echo ---------------------------------------------
-echo * Visual Studio detection:                  *
+echo * Visual Studio choice:                     *
 echo ---------------------------------------------
 for %%a in (%vs_index%) do (
    echo [%%a] Visual Studio !arrayline[%%a]!

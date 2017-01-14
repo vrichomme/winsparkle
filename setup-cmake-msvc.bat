@@ -1,14 +1,11 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
-set ORG_PWD=%~dp0
+REM Specify where is installed cmake (cmake MUST be >= 3.4)
 set CMAKE_BIN_PATH=C:\Program Files\CMake\bin
 set CMAKE_CMD="%CMAKE_BIN_PATH%\cmake.exe"
+set ORG_PWD=%~dp0
 
-REM SET /a count=5
-REM for /l %%a in (1,1,%count%) do call set "Myvar=%%Myvar%%, %%a"
-REM ECHO %Myvar:~2%
-REM PAUSE 
 CLS
 echo( 
 echo *******************************************************

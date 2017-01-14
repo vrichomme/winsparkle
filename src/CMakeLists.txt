@@ -53,3 +53,8 @@ target_link_libraries (${COMPONENT_NAME}
 )
 # Add dependencies with expat and WinSparkle_wx
 target_link_libraries (${COMPONENT_NAME} WinSparkle_expat WinSparkle_wx)
+
+# Do not add d suffix in Debug builds
+if(MSVC)
+ set_target_properties(${COMPONENT_NAME} PROPERTIES DEBUG_POSTFIX "")
+endif()

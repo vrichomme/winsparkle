@@ -6,11 +6,12 @@ project(WinSparkle)
 #set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Global settings
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-add_definitions(-D_UNICODE -DUNICODE -DUSING_CMAKE -D_CRT_SECURE_NO_WARNINGS)
-
 if(MSVC)
-   #multi-core build
+   # Allow use of virtual folders
+   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+   add_definitions(-D_UNICODE -DUNICODE -DUSING_CMAKE -D_CRT_SECURE_NO_WARNINGS)
+
+   #multi-core build (/MP compiler flag)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP" CACHE INTERNAL "" FORCE)
 

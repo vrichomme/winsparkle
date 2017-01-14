@@ -1,5 +1,5 @@
+@setlocal enableextensions enabledelayedexpansion
 @echo off
-SETLOCAL EnableDelayedExpansion
 
 REM Specify where is installed cmake (cmake MUST be >= 3.4)
 set CMAKE_BIN_PATH=C:\Program Files\CMake\bin
@@ -79,22 +79,22 @@ set VSNUM=%VSINDEXCHOICE%
 set VSVER=!arrayline[%VSINDEXCHOICE%]!
 set BUILD_DIR=build\msvc%VSVER%
 
-REM set DEL_BUILD_FOLDER=
-REM IF EXIST %BUILD_DIR% (
-   REM CLS
-REM :AskRemoveBuildDir
-REM set DEL_BUILD_FOLDER=
-REM set /P DEL_BUILD_FOLDER=%BUILD_DIR% already exists. Press y to remove (or q to quit) 
-REM if /I "%DEL_BUILD_FOLDER%"=="y" (
-REM   RD /S /Q %BUILD_DIR%
-   REM goto AfterAskRemoveBuildDir
-REM )
-REM if /I "%DEL_BUILD_FOLDER%"=="q" (
-   REM goto Exit
-REM )
-REM echo Wrong choice & goto AskRemoveBuildDir
-REM :AfterAskRemoveBuildDir
-REM )
+set DEL_BUILD_FOLDER=
+IF EXIST %BUILD_DIR% (
+   CLS
+:AskRemoveBuildDir
+set DEL_BUILD_FOLDER=
+set /P DEL_BUILD_FOLDER=%BUILD_DIR% already exists. Press y to remove (or q to quit) 
+if /I "%DEL_BUILD_FOLDER%"=="y" (
+  RD /S /Q %BUILD_DIR%
+  goto AfterAskRemoveBuildDir
+)
+if /I "%DEL_BUILD_FOLDER%"=="q" (
+   goto Exit
+)
+echo Wrong choice & goto AskRemoveBuildDir
+)
+:AfterAskRemoveBuildDir
 if not exist %BUILD_DIR% (mkdir %BUILD_DIR%)
 
 :AskArch
@@ -158,4 +158,4 @@ REM IF %ERRORLEVEL% NEQ 0 (
 :Exit
 cd %ORG_PWD%
 
-pause
+endlocal

@@ -31,7 +31,9 @@
 #include "winsparkle-version.h"
 
 #if !defined(BUILDING_WIN_SPARKLE) && defined(_MSC_VER)
-#pragma comment(lib, "WinSparkle.lib")
+#   ifndef USING_CMAKE
+#       pragma comment(lib, "WinSparkle.lib")
+#   endif
 #endif
 
 #ifdef __cplusplus

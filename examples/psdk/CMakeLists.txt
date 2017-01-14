@@ -16,8 +16,7 @@ source_group("res" FILES ${RES_FILES})
 set (CMAKE_CXX_STANDARD 11)
 
 #Create the executable COMPONENT_NAME.exe 
-add_executable(
-   ${COMPONENT_NAME}
+add_executable(${COMPONENT_NAME} WIN32
    ${INCLUDE_FILES}
    ${SRC_FILES}
    ${RES_FILES}

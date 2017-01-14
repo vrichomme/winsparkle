@@ -208,19 +208,8 @@ source_group("wxprecomp" FILES ${PRECOMP_SOURCES})
 add_library(${PROJECT_NAME} ${WX_SOURCES} ${PRECOMP_SOURCES})
 
 if(MSVC)
-   #remove warning C4535: calling _set_se_translator() requires /EHa
-   set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4535")
-   #multi-core build
-   SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /MP" )
-   #add_definitions(/MP) 
-
-   # Starting from VS2015 we enable /Zc:threadSafeInit
-   if((MSVC_VERSION GREATER 1900) OR (MSVC_VERSION EQUAL 1900))
-      message(STATUS "Enabling /Zc:threadSafeInit")
-      SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /Zc:threadSafeInit-" )
-      
-   endif()
-  
+  #remove warning C4535: calling _set_se_translator() requires /EHa
+  set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4535")
 endif(MSVC)
 
 
